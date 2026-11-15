@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home · M Music</title>
+<link rel="icon" href="https://res.cloudinary.com/wouvigfc/image/upload/v1794749995/erasebg-transformed_2.png">
+<link rel="stylesheet" href="style.css">
+<style>
+.results{margin-top:48px}
+.status{color:var(--muted);font-size:14px;margin-top:16px;min-height:20px}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;background:var(--line);margin-bottom:14px;display:block}
+.card .ph{width:100%;aspect-ratio:1;border-radius:10px;background:var(--line);margin-bottom:14px}
+.card p{color:var(--muted);font-size:13px}
+.hint{color:var(--muted);font-size:13px;margin-top:10px}
+</style>
+</head>
+<body>
+<header><div class="nav">
+<a class="brand" href="home.html"><img src="https://res.cloudinary.com/wouvigfc/image/upload/v1794749995/erasebg-transformed_2.png" alt="M Music"><span>M Music</span></a>
+<nav class="tabs">
+<a href="home.html" class="active">Home</a>
+<a href="downloads.html">Downloads</a>
+<a href="details.html">Details</a>
+<a href="home.html#about">About</a>
+</nav></div></header>
+<main>
+<section class="hero">
+<span class="badge">Versi 1.0 · Beta</span>
+<h1>Cari lagu favoritmu</h1>
+<p class="lead">Katalog M Music mencakup lebih dari 100 juta lagu. Cari judul atau artis, lalu dengarkan lewat aplikasi Android.</p>
+<form class="search" id="searchForm">
+<input id="q" placeholder="Cari lagu, artis, atau album" autocomplete="off" required>
+<button type="submit">Cari</button>
+</form>
+<p class="hint">Untuk memutar lagu, unduh aplikasi Android M Music.</p>
+</section>
+<section class="results">
+<div class="status" id="status"></div>
+<div class="grid" id="results"></div>
+</section>
+<h2 id="about">Tentang M Music</h2>
+<div class="two">
+<div><h3>Misi kami</h3><p class="lead" style="font-size:15px">Membuat musik dari seluruh dunia mudah diakses siapa saja, kapan saja, di perangkat apa pun.</p></div>
+<div><h3>Status proyek</h3><p class="lead" style="font-size:15px">M Music saat ini dalam tahap <b>Beta 1.0</b>. Fitur masih terus disempurnakan berdasarkan masukan pengguna.</p></div>
+</div>
+</main>
+<footer>© 2026 M Music · Versi 1.0 (Beta)</footer>
+<script>
+const API = "https://musicvalt-api.revhan-stories12.workers.dev/?q=";
+const form = document.getElementById("searchForm");
+const input = document.getElementById("q");
+const results = document.getElementById("results");
+const status = document.getElementById("status");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const term = input.value.trim();
+  if (!term) return;
+  results.innerHTML = "";
+  status.textContent = "Mencari...";
+  try {
+    const res = await fetch(API + encodeURIComponent(term));
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      status.textContent = "Lagu tidak ditemukan untuk \"" + term + "\".";
+      return;
+    }
+    status.textContent = data.length + " hasil untuk \"" + term + "\"";
+    data.forEach((song) => {
+      const card = document.createElement("a");
+      card.className = "card";
+      const params = new URLSearchParams({ title: song.judul || "", artist: song.artis || "", cover: song.coverArt || "" });
+      card.href = "Detail.html?" + params.toString();
+      if (song.coverArt) {
+        const img = document.createElement("img");
+        img.src = song.coverArt;
+        img.alt = song.judul || "";
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+        card.appendChild(img);
+      } else {
+        const ph = document.createElement("div");
+        ph.className = "ph";
+        card.appendChild(ph);
+      }
+      const h3 = document.createElement("h3");
+      h3.textContent = song.judul || "Tanpa judul";
+      const p = document.createElement("p");
+      p.textContent = song.artis || "Artis tidak diketahui";
+      card.append(h3, p);
+      results.appendChild(card);
+    });
+  } catch (err) {
+    status.textContent = "Gagal memuat hasil. Coba lagi nanti.";
+  }
+});
+</script>
+</body>
+</html>

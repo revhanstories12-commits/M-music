@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Lagu · M Music</title>
+<link rel="icon" href="https://res.cloudinary.com/wouvigfc/image/upload/v1794749995/erasebg-transformed_2.png">
+<link rel="stylesheet" href="style.css">
+<style>
+.player .cover img{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
+.note{color:var(--muted);font-size:14px;margin-top:20px;max-width:460px}
+</style>
+</head>
+<body>
+<header><div class="nav">
+<a class="brand" href="home.html"><img src="https://res.cloudinary.com/wouvigfc/image/upload/v1794749995/erasebg-transformed_2.png" alt="M Music"><span>M Music</span></a>
+<nav class="tabs">
+<a href="home.html">Home</a>
+<a href="downloads.html">Downloads</a>
+<a href="details.html">Details</a>
+<a href="home.html#about">About</a>
+</nav></div></header>
+<main>
+<div class="player">
+<div class="cover" id="cover"></div>
+<div>
+<span class="badge">Lagu</span>
+<h1 id="title">Judul lagu</h1>
+<p class="lead" id="artist" style="font-size:16px"></p>
+<div class="actions">
+<a class="btn" href="downloads.html">Unduh aplikasi Android</a>
+</div>
+<p class="note">Lagu hanya bisa diputar di aplikasi Android M Music.</p>
+</div>
+</div>
+<a class="back" href="home.html">← Kembali ke Home</a>
+</main>
+<footer>© 2026 M Music · Versi 1.0 (Beta)</footer>
+
+<script>
+function esc(s){return String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+const p = new URLSearchParams(location.search);
+const title = p.get("title") || "Judul tidak diketahui";
+const artist = p.get("artist") || "Artis tidak diketahui";
+const cover = p.get("cover");
+document.title = title + " · M Music";
+document.getElementById("title").textContent = title;
+document.getElementById("artist").textContent = artist;
+if(cover){
+  document.getElementById("cover").innerHTML = `<img src="${esc(cover)}" alt="">`;
+}
+</script>
+</body>
+</html>
